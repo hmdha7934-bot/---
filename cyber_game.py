@@ -1,107 +1,113 @@
 import streamlit as st
 import time
 
-# إعدادات الشاشة الكاملة
-st.set_page_config(page_title="CODE CATCHER: ULTIMATE", page_icon="☣️", layout="wide")
+# إعدادات واجهة المستقبل
+st.set_page_config(page_title="CODE-CATCHER AI", page_icon="⚡", layout="wide")
 
-# هندسة الواجهة (CSS) - ستايل الاستخبارات الرقمية
+# تصميم الواجهة (نظام تشغيل سيبراني)
 st.markdown("""
     <style>
-    .stApp { background: linear-gradient(rgba(0,0,0,0.9), rgba(0,0,0,0.9)), url('https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueGZ3bmZ3bmZ3bmZ3bmZ3JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/3o7TKSjPqcKGRZaO3u/giphy.gif'); background-size: cover; }
-    h1, h2, h3, p, label { color: #00FF41 !important; text-shadow: 0 0 10px #00FF41; font-family: 'Share Tech Mono', monospace; text-align: right; }
-    .stButton > button { width: 100%; border: 2px solid #00FF41; background-color: rgba(0,255,65,0.1); color: #00FF41; font-size: 20px; font-weight: bold; transition: 0.5s; height: 60px; }
-    .stButton > button:hover { background-color: #00FF41; color: black; box-shadow: 0 0 30px #00FF41; transform: scale(1.02); }
-    .terminal-box { border: 2px solid #00FF41; padding: 30px; background-color: rgba(0,0,0,0.8); border-radius: 5px; direction: rtl; }
-    .glitch { color: white; animation: glitch 1s linear infinite; }
-    @keyframes glitch { 2% { text-shadow: 2px 0 red, -2px 0 blue; } }
+    .stApp { background-color: #020202; color: #00FF41; }
+    .status-bar { padding: 10px; background: #111; border: 1px solid #00FF41; border-radius: 5px; text-align: center; font-family: monospace; }
+    .terminal-card { background: rgba(0, 255, 65, 0.05); border-right: 5px solid #00FF41; padding: 20px; margin: 10px 0; font-family: 'Courier New', monospace; }
+    .stButton > button { background: black; color: #00FF41; border: 1px solid #00FF41; border-radius: 0px; font-weight: bold; height: 3em; transition: 0.5s; }
+    .stButton > button:hover { background: #00FF41; color: black; box-shadow: 0 0 20px #00FF41; }
+    .blink { animation: blinker 1s linear infinite; color: #FF0000; font-weight: bold; }
+    @keyframes blinker { 50% { opacity: 0; } }
     </style>
     """, unsafe_allow_html=True)
 
-# إدارة حالة اللعبة
-if 'mode' not in st.session_state: st.session_state.mode = "auth"
+# إدارة حالة النظام
+if 'system_status' not in st.session_state: st.session_state.system_status = "locked"
+if 'threat_level' not in st.session_state: st.session_state.threat_level = 50
 
-# --- 1. مرحلة التصريح (الدخول) ---
-if st.session_state.mode == "auth":
-    st.markdown("<h1 class='glitch' style='text-align: center;'>☣️ نظام كود-قاتشر: البروتوكول الأخير</h1>", unsafe_allow_html=True)
-    st.image("https://r2.erweima.ai/i/6DAnC4M_S2m4_wS_Y1A5pA.png", width=500)
-    
-    # محاكاة تشغيل الموسيقى (رابط بديل ومباشر)
-    st.markdown("### 🎵 اضغطي تشغيل لتفعيل موسيقى القضاء")
-    st.video("https://www.youtube.com/watch?v=mt-C3C78_wE") # موسيقى قوية من يوتيوب تفتح كخلفية
-    
-    user_id = st.text_input("إدخال رمز التعريف (اسمك):", placeholder="الجوري...")
-    if st.button("تأكيد الهوية وتفعيل النظام 🔓"):
-        if user_id:
-            st.session_state.user_id = user_id
-            st.session_state.mode = "briefing"
-            st.rerun()
-
-# --- 2. الفصل الأول: القصة الطويلة (الخطر المحدق) ---
-elif st.session_state.mode == "briefing":
-    st.markdown(f"<h2>🕵️‍♂️ ملف القضية المفتوحة: العملية (صفر)</h2>", unsafe_allow_html=True)
-    st.markdown(f"""
-    <div class="terminal-box">
-    المحققة <b>{st.session_state.user_id}</b>، مرحباً بكِ في المركز الوطني للعمليات السيبرانية. <br><br>
-    لقد حدث ما كنا نخشاه.. في منتصف الليل، تم اختراق نظام "المنصة التعليمية الوطنية". 
-    الهاكر ليس شخصاً عادياً، إنه يستخدم تقنيات <b>Quantum Hacking</b>. <br><br>
-    <b>تفاصيل الجريمة:</b><br>
-    1. تم تشفير ملفات درجات مليون طالب وطالبة.<br>
-    2. النظام الآن يرسل رسائل وهمية لجميع أولياء الأمور تطلب مبالغ مالية.<br>
-    3. الهاكر زرع "دودة رقمية" (Worm) تنتشر في أجهزة المعلمات الآن!<br><br>
-    لقد تتبعنا الإشارة، الهاكر يختبئ خلف 7 خوادم وهمية، وقد ترك رسالة مشفرة تقول: 
-    "إذا أردتم مفتاح فك التشفير، عليكم هزيمتي في قاعة القضاء الرقمي، لديكم 5 دقائق قبل مسح السيرفر بالكامل".<br><br>
-    <b>هل أنتِ مستعدة للمخاطرة بسمعتكِ المهنية لإنقاذ مستقبل الطلاب؟</b>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    if st.button("بدء عملية الهجوم المضاد 🔥"):
-        st.session_state.mode = "interrogation"
-        st.rerun()
-
-# --- 3. الفصل الثاني: التحقيق والأسئلة ---
-elif st.session_state.mode == "interrogation":
-    st.markdown("<h3>⚡ المعركة السيبرانية: الجوري vs الظل الأسود</h3>", unsafe_allow_html=True)
-    cols = st.columns([1, 1])
-    
-    with cols[0]:
-        st.markdown("<p style='color:red !important;'>🚨 حالة النظام: تحت الهجوم</p>", unsafe_allow_html=True)
-        st.write("---")
-        q1 = st.radio("🛡️ التحدي 1: الهاكر أرسل ملف باسم (grades_update.exe). ما هو قرارك؟", ["فتحه لفحص الدرجات", "حذفه فوراً وعمل Scan للشبكة", "إرساله لصديقتي"])
-        q2 = st.radio("🛡️ التحدي 2: اكتشفنا أن الهاكر استخدم 'هجمة الرجل في المنتصف' (MITM). كيف نمنعه؟", ["استخدام VPN وتشفير SSL", "إغلاق الشاشة", "تغيير لغة الحاسب"])
-    
+# --- 1. واجهة الدخول الأمنية ---
+if st.session_state.system_status == "locked":
+    st.markdown("<h1 style='text-align: center; letter-spacing: 5px;'>SYSTEM INITIALIZATION</h1>", unsafe_allow_html=True)
+    cols = st.columns([1, 2, 1])
     with cols[1]:
-        st.write("---")
-        q3 = st.radio("🛡️ التحدي 3: أي من الروابط التالية هو 'رابط ملغم' زرعه الهاكر؟", ["https://saudi-edu.gov.sa", "http://login-school-verify.xyz/auth", "https://microsoft.com"])
-        q4 = st.radio("🛡️ التحدي 4: ما هي أقوى وسيلة لحماية حساب المديرة من الاختراق المستقبلي؟", ["كلمة مرور من 4 أرقام", "مفتاح أمان فيزيائي (Yubikey)", "عدم استخدام الكمبيوتر"])
+        st.image("https://r2.erweima.ai/i/6DAnC4M_S2m4_wS_Y1A5pA.png", use_container_width=True)
+        st.markdown("<p class='blink' style='text-align: center;'>⚠️ تنبيه: محاولة اختراق نشطة مكتشفة</p>", unsafe_allow_html=True)
+        
+        # تفعيل الصوت (موسيقى القضاء)
+        st.write("🎵 **تفعيل بروتوكول الصوت (القضاء):**")
+        st.audio("https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptitle=Yargi+Main+Theme&filename=mt/mtyzodm3nzm2mtyzody5_vj_2bl_2bjv_2bq2u.mp3")
+        
+        user = st.text_input("إدخال بصمة المحقق (الاسم):")
+        if st.button("تأكيد الدخول السريع ⚡"):
+            if user:
+                st.session_state.user = user
+                st.session_state.system_status = "story_mode"
+                st.rerun()
 
-    if st.button("⚖️ إصدار الحكم التقني"):
-        if q1 == "حذفه فوراً وعمل Scan للشبكة" and q2 == "استخدام VPN وتشفير SSL" and q3 == "http://login-school-verify.xyz/auth" and q4 == "مفتاح أمان فيزيائي (Yubikey)":
-            st.session_state.mode = "victory"
-        else:
-            st.error("❌ خطأ! الهاكر اخترق جدار حماية إضافي. ركزي يا جوري!")
-        st.rerun()
-
-# --- 4. الفصل الأخير: النصر والتقييم ---
-elif st.session_state.mode == "victory":
-    st.balloons()
-    st.markdown("<h1>🏆 تم استعادة السيطرة: نصر الجوري الأسطوري</h1>", unsafe_allow_html=True)
+# --- 2. القصة: سيناريو ساعة الصفر ---
+elif st.session_state.system_status == "story_mode":
+    st.markdown(f"<h3>📂 التقرير السري: عملية الظل العكسي</h3>", unsafe_allow_html=True)
     st.markdown(f"""
-    <div class="terminal-box" style="border-color: gold;">
-    لقد سقط (الظل الأسود)! تم فك التشفير في الثانية الأخيرة. <br>
-    المحقق <b>{st.session_state.user_id}</b>، لقد أثبتِّ أنكِ درع الوطن الرقمي. 
-    الطلاب والمعلمون مدينون لكِ بهذا النصر.
+    <div class='terminal-card'>
+    المحقق <b>{st.session_state.user}</b>، نحن لا نواجه هاكر عادي.. نحن نواجه "ذكاء اصطناعي متمرد"! <br><br>
+    لقد تم اختراق نظام التحكم في الإضاءة والشبكة داخل المدرسة. الكاميرات تم توجيهها نحو الحائط، 
+    وتم قفل الأبواب الذكية على المعلمات بالداخل! <br><br>
+    الهاكر أرسل شيفرة ثنائية (Binary) تقول: "المدرسة ستظل مظلمة حتى يتم تسليم شيفرة فك التشفير الرئيسية". <br>
+    الخطر الآن ليس فقط الدرجات، بل أمن كل شخص داخل المبنى.<br><br>
+    <b>مهمتك:</b> اختراق "سيرفر الهاكر" نفسه وتعطيل القنبلة الرقمية قبل انفجار جدار الحماية الأخير.
     </div>
     """, unsafe_allow_html=True)
+    
+    if st.button("بدء عملية الاقتحام الرقمي 🔓"):
+        st.session_state.system_status = "mission_control"
+        st.rerun()
+
+# --- 3. المهمة: لوحة التحكم التفاعلية ---
+elif st.session_state.system_status == "mission_control":
+    st.markdown(f"<h2>🛠️ غرفة العمليات السيبرانية - القائد {st.session_state.user}</h2>", unsafe_allow_html=True)
+    
+    # عداد الخطر
+    st.write(f"مستوى التهديد الحالي: {st.session_state.threat_level}%")
+    st.progress(st.session_state.threat_level)
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("<div class='terminal-card'><b>[الثغرة 1]</b><br>تلقيتِ إشارة من جهاز المعلمة 'هند'. الجهاز يرسل بيانات لموقع مجهول.</div>", unsafe_allow_html=True)
+        choice1 = st.selectbox("الإجراء:", ["تنسيق القرص الصلب", "تفعيل نظام IPS لعزل الاتصال", "تجاهل الإشارة"])
+        
+        st.markdown("<div class='terminal-card'><b>[الثغرة 2]</b><br>الهاكر يحاول الدخول عبر منفذ (Port 8080).</div>", unsafe_allow_html=True)
+        choice2 = st.selectbox("الإجراء:", ["إغلاق المنافذ غير المستخدمة", "تغيير كلمة مرور الواي فاي", "فتح جميع المنافذ للفخ"])
+
+    with col2:
+        st.markdown("<div class='terminal-card'><b>[الثغرة 3]</b><br>وجدتِ رسالة مشفرة: '74-68-65-20-63-6f-64-65'.</div>", unsafe_allow_html=True)
+        choice3 = st.selectbox("تحليل الشيفرة:", ["هجوم تخميني", "تشفير Hexadecimal", "رقم جوال الهاكر"])
+
+        st.markdown("<div class='terminal-card'><b>[الثغرة 4]</b><br>الهاكر يهدد بنشر صور الطلاب.</div>", unsafe_allow_html=True)
+        choice4 = st.selectbox("رد الفعل:", ["التفاوض مع الهاكر", "تفعيل بروتوكول الحماية القصوى (Encryption)", "إغلاق الكهرباء"])
+
+    if st.button("🚀 إرسال حزمة الإصلاح النهائية"):
+        # منطق النجاح (إجابات تقنية دقيقة)
+        score = 0
+        if choice1 == "تفعيل نظام IPS لعزل الاتصال": score += 25
+        if choice2 == "إغلاق المنافذ غير المستخدمة": score += 25
+        if choice3 == "تشفير Hexadecimal": score += 25
+        if choice4 == "تفعيل بروتوكول الحماية القصوى (Encryption)": score += 25
+        
+        st.session_state.threat_level = 100 - score
+        if score >= 75:
+            st.session_state.system_status = "success"
+        else:
+            st.error("❌ فشل البروتوكول! مستوى التهديد ارتفع. حاول مجدداً قبل فوات الأوان.")
+        st.rerun()
+
+# --- 4. النجاح والتقييم الذكي ---
+elif st.session_state.system_status == "success":
+    st.balloons()
+    st.markdown("<h1 style='color: gold !important; text-align: center;'>🏆 MISSION ACCOMPLISHED</h1>", unsafe_allow_html=True)
+    st.markdown(f"<div class='terminal-card'>تم القضاء على التهديد بنجاح. المحققة {st.session_state.user}، لقد أنقذتِ المدرسة من كارثة حقيقية. تم القبض على الهاكر وتأمين السيرفرات.</div>", unsafe_allow_html=True)
     
     st.write("---")
-    st.subheader("📝 كتابة ميثاق الأمان الرقمي:")
-    advice = st.text_area("بصفتكِ الخبيرة الأولى، وضعي نصيحتكِ للتاريخ:")
-    
-    if st.button("ختم الملف برتبة (خبير أمني) 🎖️"):
-        st.info("جاري تحليل بلاغكِ النهائي...")
-        time.sleep(2)
-        st.success("تم اعتماد النصيحة! تقييمك: 10/10 - عبقرية أمنية.")
-        st.markdown(f"<h3 style='text-align:center;'>إعداد المبدعة: الجوري ✨</h3>", unsafe_allow_html=True)
-        if st.button("محاكاة هجوم جديد 🔄"):
+    advice = st.text_area("✍️ بصفتكِ خبيرة AI، اكتبي نصيحة للمستقبل:")
+    if st.button("إغلاق القضية 📝"):
+        st.success("تم تحليل نصيحتكِ وحفظها في قاعدة بيانات الأمن الوطني.")
+        st.markdown(f"<h3 style='text-align:center;'>تمت البرمجة بواسطة AI للجوري ✨</h3>", unsafe_allow_html=True)
+        if st.button("بدء محاكاة جديدة"):
             st.session_state.clear()
             st.rerun()
