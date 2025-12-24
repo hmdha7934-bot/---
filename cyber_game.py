@@ -1,113 +1,197 @@
 import streamlit as st
 import time
+import random
 
-# إعدادات واجهة المستقبل
-st.set_page_config(page_title="CODE-CATCHER AI", page_icon="⚡", layout="wide")
+# إعدادات الشاشة الكاملة
+st.set_page_config(page_title="CODE BREAKER: CYBER HEIST", page_icon="⛔", layout="wide")
 
-# تصميم الواجهة (نظام تشغيل سيبراني)
-st.markdown("""
+# CSS المتقدم: خلفية هكر متحركة، تأثيرات Glitch، خطوط تيرمينال
+st.markdown(
+    """
     <style>
-    .stApp { background-color: #020202; color: #00FF41; }
-    .status-bar { padding: 10px; background: #111; border: 1px solid #00FF41; border-radius: 5px; text-align: center; font-family: monospace; }
-    .terminal-card { background: rgba(0, 255, 65, 0.05); border-right: 5px solid #00FF41; padding: 20px; margin: 10px 0; font-family: 'Courier New', monospace; }
-    .stButton > button { background: black; color: #00FF41; border: 1px solid #00FF41; border-radius: 0px; font-weight: bold; height: 3em; transition: 0.5s; }
-    .stButton > button:hover { background: #00FF41; color: black; box-shadow: 0 0 20px #00FF41; }
-    .blink { animation: blinker 1s linear infinite; color: #FF0000; font-weight: bold; }
-    @keyframes blinker { 50% { opacity: 0; } }
+    /* خلفية الماتريكس المتحركة */
+    .stApp {
+        background: linear-gradient(rgba(0,0,0,0.95), rgba(0,0,0,0.95)), url('https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMjV6aTFtZTRtZmNzbW5mdjFkY2N6d3B4cDhqZ2Z5ZnU4OWJ2OWwyaSZlcD12MV9pbnRlcm5uYWxfZ2lmX2J5X2lkJmN0PWc/3o7TKSjPqcKGRZaO3u/giphy.gif');
+        background-size: cover;
+        background-attachment: fixed;
+    }
+    /* الألوان والخطوط */
+    h1, h2, h3, p, label, .stMarkdown { color: #00FF41 !important; font-family: 'Share Tech Mono', monospace; text-shadow: 0 0 8px rgba(0,255,65,0.7); }
+    /* زر التفاعل */
+    .stButton > button { 
+        width: 100%; border: 2px solid #00FF41; background-color: rgba(0,255,65,0.1); color: #00FF41; 
+        font-size: 20px; font-weight: bold; transition: 0.5s; height: 65px; border-radius: 5px;
+        box-shadow: 0 0 15px rgba(0,255,65,0.5);
+    }
+    .stButton > button:hover { background-color: #00FF41; color: black; box-shadow: 0 0 40px #00FF41; transform: translateY(-3px); }
+    /* مربعات القصة والتحقيق */
+    .story-card { 
+        background-color: rgba(10,10,10,0.9); border: 1px solid #00FF41; border-left: 5px solid #00FF41; 
+        padding: 25px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,255,65,0.3);
+        line-height: 1.8; font-size: 17px; direction: rtl; text-align: right;
+    }
+    /* مؤثرات الهاكينج */
+    .hacked-text { color: #FF0000; font-weight: bold; animation: glitch 0.5s linear infinite alternate; }
+    @keyframes glitch { 0% { text-shadow: 1px 0 red, -1px 0 blue; opacity: 0.8; } 100% { text-shadow: -1px 0 red, 1px 0 blue; opacity: 1; } }
+    /* خطوط الإدخال */
+    .stTextInput > div > div > input { background-color: #1a1a1a; color: #00FF41; border: 1px solid #00FF41; font-family: monospace; }
+    /* العد التنازلي */
+    .timer-display { font-size: 3em; color: #FFFF00; text-align: center; margin-bottom: 20px; font-family: 'Press Start 2P', cursive; text-shadow: 0 0 15px #FFFF00; }
     </style>
-    """, unsafe_allow_html=True)
+    """, unsafe_allow_html=True
+)
 
-# إدارة حالة النظام
-if 'system_status' not in st.session_state: st.session_state.system_status = "locked"
-if 'threat_level' not in st.session_state: st.session_state.threat_level = 50
+# إدارة حالة اللعبة والتقدم
+if 'game_state' not in st.session_state: st.session_state.game_state = "init"
+if 'player_id' not in st.session_state: st.session_state.player_id = ""
+if 'hack_level' not in st.session_state: st.session_state.hack_level = 0
+if 'timer_start' not in st.session_state: st.session_state.timer_start = 0
 
-# --- 1. واجهة الدخول الأمنية ---
-if st.session_state.system_status == "locked":
-    st.markdown("<h1 style='text-align: center; letter-spacing: 5px;'>SYSTEM INITIALIZATION</h1>", unsafe_allow_html=True)
-    cols = st.columns([1, 2, 1])
-    with cols[1]:
-        st.image("https://r2.erweima.ai/i/6DAnC4M_S2m4_wS_Y1A5pA.png", use_container_width=True)
-        st.markdown("<p class='blink' style='text-align: center;'>⚠️ تنبيه: محاولة اختراق نشطة مكتشفة</p>", unsafe_allow_html=True)
+# --- وظيفة محاكاة "تساقط الرموز" ---
+def display_falling_code():
+    if random.random() < 0.7: # احتمال ظهور الرموز
+        st.markdown(f"<p style='color: rgba(0,255,65,{random.uniform(0.1, 0.5)}); font-size: {random.randint(10, 30)}px; position: absolute; left: {random.randint(0,100)}vw; top: {random.randint(0,100)}vh;'>{chr(random.randint(33,126))}</p>", unsafe_allow_html=True)
         
-        # تفعيل الصوت (موسيقى القضاء)
-        st.write("🎵 **تفعيل بروتوكول الصوت (القضاء):**")
-        st.audio("https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptitle=Yargi+Main+Theme&filename=mt/mtyzodm3nzm2mtyzody5_vj_2bl_2bjv_2bq2u.mp3")
-        
-        user = st.text_input("إدخال بصمة المحقق (الاسم):")
-        if st.button("تأكيد الدخول السريع ⚡"):
-            if user:
-                st.session_state.user = user
-                st.session_state.system_status = "story_mode"
-                st.rerun()
+# --- المرحلة 1: التهيئة وبدء الموسيقى ---
+if st.session_state.game_state == "init":
+    st.markdown("<h1 class='hacked-text' style='text-align: center;'>⛔ نظام CODE BREAKER: سرقة البيانات الكبرى</h1>", unsafe_allow_html=True)
+    st.image("https://r2.erweima.ai/i/6DAnC4M_S2m4_wS_Y1A5pA.png", width=500)
+    
+    st.warning("⚠️ تنبيه: يرجى تشغيل موسيقى القضية أدناه لتجربة غامرة.")
+    st.audio("https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptitle=Yargi+Main+Theme&filename=mt/mtyzodm3nzm2mtyzody5_vj_2bl_2bjv_2bq2u.mp3")
+    
+    st.write("الكون الرقمي ينهار! تحتاجنا الآن أكثر من أي وقت مضى.")
+    player_name = st.text_input("رمز تعريف المحقق (اسمك):")
+    if st.button("تفعيل بروتوكول الكود-بريكر ⚡"):
+        if player_name:
+            st.session_state.player_id = player_name
+            st.session_state.game_state = "chapter1"
+            st.session_state.timer_start = time.time()
+            st.rerun()
 
-# --- 2. القصة: سيناريو ساعة الصفر ---
-elif st.session_state.system_status == "story_mode":
-    st.markdown(f"<h3>📂 التقرير السري: عملية الظل العكسي</h3>", unsafe_allow_html=True)
+# --- المرحلة 2: الفصل الأول (قصة الكارثة) ---
+elif st.session_state.game_state == "chapter1":
+    st.markdown(f"<h2>📜 ملف سري للغاية: الفصل الأول - سقوط جدار أريحا</h2>", unsafe_allow_html=True)
+    current_time_display = 180 - int(time.time() - st.session_state.timer_start)
+    if current_time_display <= 0:
+        st.session_state.game_state = "game_over"
+        st.rerun()
+    st.markdown(f"<div class='timer-display'>العد التنازلي: {current_time_display} ثانية</div>", unsafe_allow_html=True)
+    
     st.markdown(f"""
-    <div class='terminal-card'>
-    المحقق <b>{st.session_state.user}</b>، نحن لا نواجه هاكر عادي.. نحن نواجه "ذكاء اصطناعي متمرد"! <br><br>
-    لقد تم اختراق نظام التحكم في الإضاءة والشبكة داخل المدرسة. الكاميرات تم توجيهها نحو الحائط، 
-    وتم قفل الأبواب الذكية على المعلمات بالداخل! <br><br>
-    الهاكر أرسل شيفرة ثنائية (Binary) تقول: "المدرسة ستظل مظلمة حتى يتم تسليم شيفرة فك التشفير الرئيسية". <br>
-    الخطر الآن ليس فقط الدرجات، بل أمن كل شخص داخل المبنى.<br><br>
-    <b>مهمتك:</b> اختراق "سيرفر الهاكر" نفسه وتعطيل القنبلة الرقمية قبل انفجار جدار الحماية الأخير.
+    <div class="story-card">
+    المحقق <b>{st.session_state.player_id}</b>، لقد أعلنا حالة الطوارئ القصوى. 
+    عند الساعة 04:00 فجراً، استقبلت جميع الشاشات في العالم رسالة واحدة: <br>
+    <code class="hacked-text">"SYSTEM OF ALL IS NOW MINE. ALL DATA BELONGS TO THE SHADOW. FILE: GRADES_DB.ENC"</code> <br><br>
+    نظامنا المركزي ليس مخترقاً فحسب، بل تم اختطافه بالكامل! 
+    <b>(الظل)</b>، وهو كيان رقمي غامض، شفر مليارات البيانات حول العالم، وبدأ بنظامكم التعليمي. 
+    يطلب منا تسليم "الشيفرة الذهبية" (Golden Key) وهي مفتاح فك تشفير كل بيانات العالم. 
+    إذا لم نفعل، سيدمر كل شيء خلال 3 دقائق.<br><br>
+    لقد ترك لنا تلميحاً غامضاً: "البوابة الأولى هي حيث تبدأ كل رحلة.. ابحثوا عن الضعف في أول نقطة اتصال". 
     </div>
     """, unsafe_allow_html=True)
     
-    if st.button("بدء عملية الاقتحام الرقمي 🔓"):
-        st.session_state.system_status = "mission_control"
+    if st.button("دخول منطقة الاختراق ⚠️"):
+        st.session_state.game_state = "chapter2"
         st.rerun()
 
-# --- 3. المهمة: لوحة التحكم التفاعلية ---
-elif st.session_state.system_status == "mission_control":
-    st.markdown(f"<h2>🛠️ غرفة العمليات السيبرانية - القائد {st.session_state.user}</h2>", unsafe_allow_html=True)
-    
-    # عداد الخطر
-    st.write(f"مستوى التهديد الحالي: {st.session_state.threat_level}%")
-    st.progress(st.session_state.threat_level)
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.markdown("<div class='terminal-card'><b>[الثغرة 1]</b><br>تلقيتِ إشارة من جهاز المعلمة 'هند'. الجهاز يرسل بيانات لموقع مجهول.</div>", unsafe_allow_html=True)
-        choice1 = st.selectbox("الإجراء:", ["تنسيق القرص الصلب", "تفعيل نظام IPS لعزل الاتصال", "تجاهل الإشارة"])
-        
-        st.markdown("<div class='terminal-card'><b>[الثغرة 2]</b><br>الهاكر يحاول الدخول عبر منفذ (Port 8080).</div>", unsafe_allow_html=True)
-        choice2 = st.selectbox("الإجراء:", ["إغلاق المنافذ غير المستخدمة", "تغيير كلمة مرور الواي فاي", "فتح جميع المنافذ للفخ"])
+# --- المرحلة 3: الفصل الثاني (تحليل الاختراق والأسئلة) ---
+elif st.session_state.game_state == "chapter2":
+    st.markdown(f"<h2>🔬 تحليل الاختراق: البحث عن الثغرات</h2>", unsafe_allow_html=True)
+    current_time_display = 180 - int(time.time() - st.session_state.timer_start)
+    if current_time_display <= 0:
+        st.session_state.game_state = "game_over"
+        st.rerun()
+    st.markdown(f"<div class='timer-display'>الوقت المتبقي: {current_time_display} ثانية</div>", unsafe_allow_html=True)
 
-    with col2:
-        st.markdown("<div class='terminal-card'><b>[الثغرة 3]</b><br>وجدتِ رسالة مشفرة: '74-68-65-20-63-6f-64-65'.</div>", unsafe_allow_html=True)
-        choice3 = st.selectbox("تحليل الشيفرة:", ["هجوم تخميني", "تشفير Hexadecimal", "رقم جوال الهاكر"])
+    st.markdown(f"""
+    <div class="story-card">
+    لقد تتبعنا إشارة <b>الظل</b>. نقطة الدخول كانت عبر بريد إلكتروني لمعلمة للرياضيات. 
+    الرسالة كانت بعنوان: <code class="hacked-text">'فائزة بجائزة آبل لعام 2024!'</code>.<br><br>
+    <b>السؤال الأول:</b> الهاكر استخدم تقنية 'التزييف' لجعل الإيميل يبدو حقيقياً. أي من التواقيع التالية تكشف أن الإيميل مزيف؟
+    </div>
+    """, unsafe_allow_html=True)
+    q1 = st.radio("اختيارك:", ["الرسالة مرسلة من Apple.com.sa", "الرسالة تحتوي على رابط http://apple.prize-win.xyz", "الرسالة فيها صور كثيرة"])
 
-        st.markdown("<div class='terminal-card'><b>[الثغرة 4]</b><br>الهاكر يهدد بنشر صور الطلاب.</div>", unsafe_allow_html=True)
-        choice4 = st.selectbox("رد الفعل:", ["التفاوض مع الهاكر", "تفعيل بروتوكول الحماية القصوى (Encryption)", "إغلاق الكهرباء"])
+    st.markdown(f"""
+    <div class="story-card">
+    <b>السؤال الثاني:</b> بعد فتح الرابط، تم تحميل برنامج خبيث على جهاز المعلمة. 
+    البرنامج بدأ بإنشاء ملفات وهمية لإخفاء نفسه. ما هو نوع هذا الهجوم؟
+    </div>
+    """, unsafe_allow_html=True)
+    q2 = st.radio("اختيارك:", ["هجوم DDoS", "فيروس حصان طروادة (Trojan Horse)", "هجوم التصيد (Phishing)"])
 
-    if st.button("🚀 إرسال حزمة الإصلاح النهائية"):
-        # منطق النجاح (إجابات تقنية دقيقة)
-        score = 0
-        if choice1 == "تفعيل نظام IPS لعزل الاتصال": score += 25
-        if choice2 == "إغلاق المنافذ غير المستخدمة": score += 25
-        if choice3 == "تشفير Hexadecimal": score += 25
-        if choice4 == "تفعيل بروتوكول الحماية القصوى (Encryption)": score += 25
-        
-        st.session_state.threat_level = 100 - score
-        if score >= 75:
-            st.session_state.system_status = "success"
+    if st.button("تحليل البيانات واكتشاف الخطوة التالية 🔎"):
+        if q1 == "الرسالة تحتوي على رابط http://apple.prize-win.xyz" and q2 == "فيروس حصان طروادة (Trojan Horse)":
+            st.session_state.hack_level += 2
+            st.session_state.game_state = "chapter3"
         else:
-            st.error("❌ فشل البروتوكول! مستوى التهديد ارتفع. حاول مجدداً قبل فوات الأوان.")
+            st.error("❌ فشل التحليل! الهاكر تقدم خطوة. ابحثي عن المزيد من الأدلة.")
         st.rerun()
 
-# --- 4. النجاح والتقييم الذكي ---
-elif st.session_state.system_status == "success":
+# --- المرحلة 4: الفصل الثالث (فك الشفرات والأسئلة) ---
+elif st.session_state.game_state == "chapter3":
+    st.markdown(f"<h2>🔐 فك الشفرات: الوصول لقلب الهاكر</h2>", unsafe_allow_html=True)
+    current_time_display = 180 - int(time.time() - st.session_state.timer_start)
+    if current_time_display <= 0:
+        st.session_state.game_state = "game_over"
+        st.rerun()
+    st.markdown(f"<div class='timer-display'>الوقت المتبقي: {current_time_display} ثانية</div>", unsafe_allow_html=True)
+
+    st.markdown(f"""
+    <div class="story-card">
+    لقد وصلنا إلى جهازه! لكنه محمي بـ 7 طبقات من التشفير. 
+    وجدنا هذه الرسالة: <code class="hacked-text">"74 68 65 20 73 68 61 64 6f 77"</code>. 
+    هذه شيفرة مفتاح الخادم الرئيسي! <br><br>
+    <b>السؤال الثالث:</b> ما نوع هذا التشفير، وماذا تعني هذه الشيفرة باللغة الإنجليزية؟ (تلميح: هذه شيفرة نظام قديم).
+    </div>
+    """, unsafe_allow_html=True)
+    q3 = st.radio("اختيارك:", ["ASCII Hexadecimal تعني 'the shadow'", "Base64 تعني 'my secret'", "MD5 Hash لا يمكن فكها"])
+
+    st.markdown(f"""
+    <div class="story-card">
+    <b>السؤال الرابع:</b> لقد حددنا موقعه الجغرافي. إنه يستخدم شبكة 'واي فاي عامة' في مقهى. ما هو البروتوكول الأمني الذي يجب تفعيله فوراً لحماية نفسك في شبكات الواي فاي العامة؟
+    </div>
+    """, unsafe_allow_html=True)
+    q4 = st.radio("اختيارك:", ["استخدام VPN (الشبكة الافتراضية الخاصة)", "تغيير اسم المستخدم", "إيقاف جدار الحماية"])
+
+    if st.button("الخطوة الأخيرة: ضربة القضاء الرقمية 💥"):
+        if q3 == "ASCII Hexadecimal تعني 'the shadow'" and q4 == "استخدام VPN (الشبكة الافتراضية الخاصة)":
+            st.session_state.hack_level += 2
+            st.session_state.game_state = "victory"
+        else:
+            st.error("❌ لا! الهاكر يغير موقعه! حان وقت التدخل العنيف.")
+        st.rerun()
+
+# --- المرحلة 5: النصر أو الخسارة ---
+elif st.session_state.game_state == "victory":
     st.balloons()
-    st.markdown("<h1 style='color: gold !important; text-align: center;'>🏆 MISSION ACCOMPLISHED</h1>", unsafe_allow_html=True)
-    st.markdown(f"<div class='terminal-card'>تم القضاء على التهديد بنجاح. المحققة {st.session_state.user}، لقد أنقذتِ المدرسة من كارثة حقيقية. تم القبض على الهاكر وتأمين السيرفرات.</div>", unsafe_allow_html=True)
+    st.markdown(f"<h1 style='color: gold; text-align: center;'>🏆 انتصار المحققة {st.session_state.player_id}: تم إسقاط الظل!</h1>", unsafe_allow_html=True)
+    st.markdown(f"""
+    <div class="story-card" style="border-color: gold;">
+    بفضل ذكائكِ الخارق، تم تتبع (الظل)، فك تشفيره، والقبض عليه! <br>
+    جميع البيانات تم استعادتها، وتم تأمين الشبكة العالمية. 
+    لقد أثبتِّ أن العقل البشري، مع المعرفة الصحيحة، أقوى من أي ذكاء اصطناعي متمرد.
+    </div>
+    """, unsafe_allow_html=True)
     
     st.write("---")
-    advice = st.text_area("✍️ بصفتكِ خبيرة AI، اكتبي نصيحة للمستقبل:")
-    if st.button("إغلاق القضية 📝"):
-        st.success("تم تحليل نصيحتكِ وحفظها في قاعدة بيانات الأمن الوطني.")
-        st.markdown(f"<h3 style='text-align:center;'>تمت البرمجة بواسطة AI للجوري ✨</h3>", unsafe_allow_html=True)
-        if st.button("بدء محاكاة جديدة"):
+    st.subheader("📝 تقرير القضاء النهائي والتوصيات المستقبلية:")
+    final_report = st.text_area("اكتبي ملخصك الأمني وتوصياتك للأجيال القادمة (بصفتك الخبيرة العالمية):")
+    
+    if st.button("إغلاق الملف وتأكيد النصر 🎖️"):
+        st.markdown(f"<p class='hacked-text'>جاري تحليل تقرير المحققة {st.session_state.player_id} بواسطة نظام CODE-CATCHER AI...</p>", unsafe_allow_html=True)
+        time.sleep(2)
+        st.success("✅ تحليل ممتاز! تم منحكِ رتبة 'الخبير السيبراني الأعلى'!")
+        st.markdown(f"<h3 style='text-align: center;'>تحفة برمجية من إبداع: الجوري ✨</h3>", unsafe_allow_html=True)
+        if st.button("بدء مهمة جديدة 🔄"):
             st.session_state.clear()
             st.rerun()
+
+elif st.session_state.game_state == "game_over":
+    st.markdown("<h1 class='hacked-text' style='text-align: center;'>❌ فشل النظام: لقد دُمرت البيانات!</h1>", unsafe_allow_html=True)
+    st.image("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMjV6aTFtZTRtZmNzbW5mdjFkY2N6d3B4cDhqZ2Z5ZnU4OWJ2OWwyaSZlcD12MV9pbnRlcm5uYWxfZ2lmX2J5X2lkJmN0PWc/3o7TKSjPqcKGRZaO3u/giphy.gif", use_container_width=True)
+    st.error(f"للأسف يا {st.session_state.player_id}، الهاكر كان أسرع. جميع البيانات تم مسحها.")
+    if st.button("إعادة محاولة الإنقاذ 🔄"):
+        st.session_state.clear()
+        st.rerun()
