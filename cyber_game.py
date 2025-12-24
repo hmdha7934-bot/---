@@ -1,110 +1,104 @@
 import streamlit as st
 import time
 
-# إعدادات الصفحة الاحترافية
-st.set_page_config(page_title="Cyber Mission: Jouri", page_icon="💻", layout="centered")
+# إعدادات الصفحة
+st.set_page_config(page_title="Code Catcher: The Investigation", page_icon="🕵️‍♂️", layout="centered")
 
-# التنسيق المتقدم (CSS) لإبهار اللجنة
+# التنسيق البصري المتقدم
 st.markdown("""
     <style>
     .main { background-color: #000000; }
-    .stButton > button { 
-        width: 100%; border-radius: 5px; height: 3em; 
-        background-color: transparent; color: #00FF41; 
-        border: 1px solid #00FF41; font-family: 'Courier New', Courier, monospace;
-    }
-    .stButton > button:hover { background-color: #00FF41; color: black; box-shadow: 0 0 15px #00FF41; }
-    h1, h2, h3, p { color: #00FF41 !important; font-family: 'Courier New', Courier, monospace; }
-    .stRadio > label { color: #00FF41 !important; font-size: 18px !important; }
-    .warning { color: #FF0000; font-weight: bold; animation: blinker 1s linear infinite; }
-    @keyframes blinker { 50% { opacity: 0; } }
+    .stTextInput > div > div > input { background-color: #1a1a1a; color: #00FF41; border: 1px solid #00FF41; }
+    .stButton > button { width: 100%; border-radius: 10px; background-color: transparent; color: #00FF41; border: 2px solid #00FF41; font-weight: bold; }
+    .stButton > button:hover { background-color: #00FF41; color: black; box-shadow: 0 0 20px #00FF41; }
+    .story-box { padding: 20px; border: 1px solid #00FF41; border-radius: 10px; background-color: #0d0d0d; color: #00FF41; line-height: 1.6; }
+    h1, h2, h3 { color: #00FF41 !important; text-align: center; }
+    .terminal-text { font-family: 'Courier New', Courier, monospace; color: #00FF41; }
     </style>
     """, unsafe_allow_html=True)
 
-# إدارة حالة اللعبة والقصة
-if 'cyber_step' not in st.session_state:
-    st.session_state.cyber_step = "intro"
-if 'shield_power' not in st.session_state:
-    st.session_state.shield_power = 100
+# إدارة حالة اللعبة
+if 'game_step' not in st.session_state:
+    st.session_state.game_step = "welcome"
+if 'player_name' not in st.session_state:
+    st.session_state.player_name = ""
 
-# --- 1. القصة (المقدمة) ---
-if st.session_state.cyber_step == "intro":
-    st.markdown("<h1 style='text-align: center;'>💻 نظام الاختراق المتقدم</h1>", unsafe_allow_html=True)
-    st.image("https://r2.erweima.ai/i/6DAnC4M_S2m4_wS_Y1A5pA.png", width=350)
-    st.markdown("<p class='warning' style='text-align: center;'>⚠️ تحذير: تم اكتشاف فيروس يحاول سرقة ملفات المدرسة!</p>", unsafe_allow_html=True)
+# --- 1. شاشة الترحيب ---
+if st.session_state.game_step == "welcome":
+    st.markdown("<h1>🕵️‍♂️ أهلاً بك في عالم كود-قاتشر</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center;'>من هُنا تبدأ رحلتك في عالم الأمن السيبراني</p>", unsafe_allow_html=True)
+    st.image("https://r2.erweima.ai/i/6DAnC4M_S2m4_wS_Y1A5pA.png", width=300)
+    
+    player_n = st.text_input("أدخل اسمك أيها المحقق الرقمي:", placeholder="اكتب اسمك هنا...")
+    if st.button("🚀 ابدأ الآن"):
+        if player_n:
+            st.session_state.player_name = player_n
+            st.session_state.game_step = "story"
+            st.rerun()
+        else:
+            st.warning("يرجى إدخال اسمك لبدء المهمة!")
+
+# --- 2. القصة والتحقيق ---
+elif st.session_state.game_step == "story":
+    st.subheader("🚨 بلاغ عاجل: اختراق السيرفر المركزي")
+    st.markdown(f"""
+    <div class="story-box">
+    المحقق <b>{st.session_state.player_name}</b>، استيقظنا اليوم على كارثة! 
+    جميع درجات الطلاب في المدرسة تم تشفيرها وتحولت إلى رموز غريبة. 
+    ترك المخترق رسالة غامضة تقول: "لن تستطيعوا الوصول لبياناتكم إلا إذا عرفتم من أنا!".<br><br>
+    <b>الأدلة المتوفرة:</b><br>
+    1. تم الدخول للنظام الساعة 3 فجراً من جهاز خارجي.<br>
+    2. البصمة الرقمية تشير إلى شخص استخدم "كلمة مرور" ضعيفة جداً لأحد المعلمين.<br>
+    3. وجدنا ملفاً مخفياً باسم "The_Shadow".
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.write("### 🔍 من تعتقد أنه وراء الاختراق؟")
+    suspect = st.selectbox("اختر المتهم الرئيسي:", ["طالب عبقري يريد تغيير درجاته", "مخترق خارجي (هاكر) يبحث عن فدية", "فيروس عشوائي بسبب رابط إعلاني"])
+    
+    if st.button("تأكيد المشتبه به"):
+        st.session_state.suspect = suspect
+        st.session_state.game_step = "solve"
+        st.rerun()
+
+# --- 3. المعالجة (الأسئلة التقنية) ---
+elif st.session_state.game_step == "solve":
+    st.header("🛠️ مرحلة التطهير والمعالجة")
+    st.write(f"لقد عرفنا أن الجاني هو **{st.session_state.suspect}**. الآن يجب عليك معالجة النظام يا {st.session_state.player_name}!")
+    
     st.write("---")
-    st.write("المهمة: صد الهجمات السيبرانية وإعادة تأمين السيرفر الرئيسي.")
-    st.write(f"المحققة المسؤولة: **الجوري**")
+    st.write("**السؤال 1: الهاكر دخل عبر كلمة مرور المعلم. كيف نحمي الحساب الآن؟**")
+    q1 = st.radio("اختر الحل:", ["تغيير كلمة المرور لـ (Jouri@2025#)", "حذف حساب المعلم", "إطفاء السيرفر"])
     
-    if st.button("بدء عملية التطهير 🛡️"):
-        st.session_state.cyber_step = "mission_1"
-        st.rerun()
-
-# --- 2. المهمة الأولى: الهندسة الاجتماعية ---
-elif st.session_state.cyber_step == "mission_1":
-    st.subheader("📡 المرحلة 1: هجوم انتحال الشخصية")
-    st.info("تلقى أحد المعلمين رسالة بريد تقول: 'حدث خطأ في راتبك، ادخل بياناتك هنا'.")
-    choice = st.radio("كيف تتصرفين يا جوري؟", 
-                      ["تجاهل الرسالة وإبلاغ تقنية المعلومات", "الضغط على الرابط للتأكد", "إرسال البيانات بسرعة"])
+    st.write("**السؤال 2: وجدنا رابطاً خبيثاً هو سبب دخول الفيروس. ما هو الرابط الأخطر؟**")
+    q2 = st.radio("اختر الرابط:", ["https://moe.gov.sa", "http://win-iphone-free.biz/login", "https://google.com"])
     
-    if st.button("تأمين الثغرة ⚔️"):
-        if choice == "تجاهل الرسالة وإبلاغ تقنية المعلومات":
-            st.success("تم صد الهجوم! أنتِ ذكية جداً.")
-            time.sleep(1)
-            st.session_state.cyber_step = "mission_2"
+    if st.button("🛡️ تنفيذ أوامر التطهير"):
+        if q1 == "تغيير كلمة المرور لـ (Jouri@2025#)" and q2 == "http://win-iphone-free.biz/login":
+            st.session_state.game_step = "advice"
         else:
-            st.error("خطأ! الفيروس بدأ بالتسلل..")
-            st.session_state.shield_power -= 30
-            st.session_state.cyber_step = "mission_2"
+            st.error("فشلت المعالجة! بعض الثغرات لا تزال مفتوحة. حاول مرة أخرى.")
         st.rerun()
 
-# --- 3. المهمة الثانية: كلمات المرور ---
-elif st.session_state.cyber_step == "mission_2":
-    st.subheader("🔐 المرحلة 2: محاولة كسر التشفير")
-    st.write(f"قوة الدرع الحالي: {st.session_state.shield_power}%")
-    st.write("الهاكر يحاول تخمين كلمة مرور مدير المدرسة.")
-    choice = st.radio("أي وسيلة حماية ستفعلينها الآن؟", 
-                      ["استخدام كلمة مرور سهلة", "تفعيل التحقق بخطوتين (MFA)", "تغيير اسم المستخدم فقط"])
-    
-    if st.button("تشفير البيانات 🔒"):
-        if choice == "تفعيل التحقق بخطوتين (MFA)":
-            st.success("تم عزل الهاكر بنجاح!")
-            time.sleep(1)
-            st.session_state.cyber_step = "final_boss"
-        else:
-            st.error("الهاكر اقترب من الملفات!")
-            st.session_state.shield_power -= 40
-            st.session_state.cyber_step = "final_boss"
-        st.rerun()
-
-# --- 4. المواجهة النهائية ---
-elif st.session_state.cyber_step == "final_boss":
-    st.subheader("👾 المواجهة النهائية: الفيروس العملاق")
-    st.write("الفيروس يحاول الآن مسح قاعدة بيانات الغياب والدرجات!")
-    choice = st.radio("ما هو الإجراء الأمني الأخير؟", 
-                      ["فصل الجهاز عن الإنترنت وعمل نسخة احتياطية", "إطفاء الشاشة", "البكاء بجانب الحاسب"])
-    
-    if st.button("إنهاء التهديد 🔥"):
-        if choice == "فصل الجهاز عن الإنترنت وعمل نسخة احتياطية":
-            st.session_state.cyber_step = "victory"
-        else:
-            st.session_state.cyber_step = "game_over"
-        st.rerun()
-
-# --- شاشة النصر ---
-elif st.session_state.cyber_step == "victory":
+# --- 4. نصائح المحقق والتقييم ---
+elif st.session_state.game_step == "advice":
     st.balloons()
-    st.title("🏆 تم إنقاذ المدرسة!")
-    st.success(f"بفضل المحققة **الجوري**، النظام الآن آمن بنسبة 100%.")
-    st.image("https://cdn-icons-png.flaticon.com/512/1055/1055687.png", width=200)
-    if st.button("إعادة المهمة"):
-        st.session_state.clear()
-        st.rerun()
-
-# --- شاشة الخسارة ---
-elif st.session_state.cyber_step == "game_over":
-    st.title("💀 تم اختراق النظام!")
-    st.error("للأسف، الفيروس سيطر على الحاسب.")
-    if st.button("محاولة الإنقاذ مرة أخرى"):
-        st.session_state.clear()
-        st.rerun()
+    st.title("✅ تم استعادة النظام!")
+    st.success(f"كفو يا {st.session_state.player_name}! لقد أنقذت المدرسة.")
+    
+    st.write("---")
+    st.subheader("✍️ اكتب نصيحتك الأخيرة لزملائك لحمايتهم مستقبلاً:")
+    user_advice = st.text_area("نصيحة المحقق:", placeholder="مثلاً: لا تفتحوا الروابط المجهولة...")
+    
+    if st.button("إرسال التقرير النهائي"):
+        st.write("### 💻 تقييم نظام كود-قاتشر لنصيحتك:")
+        if len(user_advice) > 10:
+            st.info(f"نصيحتك ممتازة يا {st.session_state.player_name}! نظامنا يضيف عليها: 'تأكد دائماً من تفعيل التحقق الثنائي'.")
+            st.markdown("### التقييم النهائي: محقق سيبراني من الدرجة الأولى 🎖️")
+        else:
+            st.warning("نصيحة قصيرة جداً، لكنها بداية جيدة!")
+        
+        st.markdown(f"<div style='text-align:center; color:#00FF41;'>المطورة المبدعة للمشروع: الجوري ✨</div>", unsafe_allow_html=True)
+        if st.button("إعادة المهمة 🔄"):
+            st.session_state.clear()
+            st.rerun()
