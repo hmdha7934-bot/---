@@ -2,91 +2,120 @@ import streamlit as st
 import time
 
 # إعدادات الصفحة
-st.set_page_config(page_title="Code Catcher: The Investigation", page_icon="🕵️‍♂️", layout="centered")
+st.set_page_config(page_title="مهمة كود-قاتشر الأسطورية", page_icon="🕵️‍♀️", layout="centered")
 
-# التنسيق البصري (أسود وأخضر هاكرز)
+# التنسيق البصري (ستايل الهاكرز المتقدم)
 st.markdown("""
     <style>
-    .main { background-color: #000000; }
     .stApp { background-color: #000000; }
-    h1, h2, h3, p, label { color: #00FF41 !important; font-family: 'Courier New', monospace; }
-    .stButton > button { width: 100%; background-color: transparent; color: #00FF41; border: 2px solid #00FF41; border-radius: 10px; font-weight: bold; }
-    .stButton > button:hover { background-color: #00FF41; color: black; box-shadow: 0 0 20px #00FF41; }
-    .stTextInput > div > div > input { background-color: #1a1a1a; color: #00FF41; border: 1px solid #00FF41; }
-    .story-box { padding: 15px; border: 1px solid #00FF41; border-radius: 10px; background-color: #0d0d0d; margin-bottom: 20px; }
+    h1, h2, h3, p, label, .stMarkdown { color: #00FF41 !important; font-family: 'Courier New', monospace; }
+    .stButton > button { width: 100%; background-color: transparent; color: #00FF41; border: 2px solid #00FF41; border-radius: 15px; height: 3.5em; font-size: 18px; transition: 0.3s; }
+    .stButton > button:hover { background-color: #00FF41; color: black; box-shadow: 0 0 25px #00FF41; }
+    .story-box { padding: 25px; border-left: 5px solid #00FF41; background-color: #0d0d0d; margin-bottom: 20px; font-size: 18px; line-height: 1.8; }
+    .warning-text { color: #ff0000 !important; font-weight: bold; animation: blinker 1.5s linear infinite; }
+    @keyframes blinker { 50% { opacity: 0; } }
     </style>
     """, unsafe_allow_html=True)
 
 # إدارة مراحل اللعبة
-if 'step' not in st.session_state:
-    st.session_state.step = "welcome"
+if 'step' not in st.session_state: st.session_state.step = "welcome"
+if 'score' not in st.session_state: st.session_state.score = 0
 
-# --- المرحلة 1: الترحيب والاسم ---
+# --- المرحلة 1: الترحيب ---
 if st.session_state.step == "welcome":
-    st.markdown("<h1>🕵️‍♂️ أهلاً بك في عالم كود-قاتشر</h1>", unsafe_allow_html=True)
-    st.image("https://r2.erweima.ai/i/6DAnC4M_S2m4_wS_Y1A5pA.png", width=300)
-    st.write("من هُنا تبدأ رحلتك في عالم الأمن السيبراني..")
+    st.markdown("<h1 style='text-align: center;'>⚔️ عالم كود-قاتشر: القضاء الرقمي</h1>", unsafe_allow_html=True)
+    st.image("https://r2.erweima.ai/i/6DAnC4M_S2m4_wS_Y1A5pA.png", width=350)
+    st.write("أهلاً بكِ في أخطر مهمة أمنية.. العالم الرقمي ينهار والحل بين يديكِ.")
     
-    p_name = st.text_input("أدخل اسمك أيها المحقق الرقمي:", key="name_input")
-    if st.button("🚀 ابدأ الآن"):
-        if p_name:
-            st.session_state.p_name = p_name
-            st.session_state.step = "story"
+    name = st.text_input("أدخل اسمك أيها المحقق الرقمي (المنقذ):", key="p_name_input")
+    if st.button("🚀 دخول عالم كود-قاتشر"):
+        if name:
+            st.session_state.p_name = name
+            st.session_state.step = "story_long"
             st.rerun()
         else:
-            st.error("لازم تكتب اسمك عشان نبدأ المهمة!")
+            st.error("الاسم مطلوب لفتح السجل الأمني!")
 
-# --- المرحلة 2: القصة والتحقيق ---
-elif st.session_state.step == "story":
-    st.markdown(f"<h3>🚨 بلاغ اختراق عاجل يا {st.session_state.p_name}!</h3>", unsafe_allow_html=True)
+# --- المرحلة 2: القصة الطويلة وموسيقى القضاء ---
+elif st.session_state.step == "story_long":
+    st.markdown(f"<h3>🚨 ملف القضية رقم 707 - المحقق {st.session_state.p_name}</h3>", unsafe_allow_html=True)
+    
+    # مشغل الموسيقى (موسيقى مسلسل القضاء)
+    st.write("🎵 **شغلي موسيقى القضاء لتعيشي أجواء التحقيق:**")
+    st.audio("https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptitle=Yargi+Main+Theme&filename=mt/mtyzodm3nzm2mtyzody5_vj_2bl_2bjv_2bq2u.mp3")
+
     st.markdown(f"""
     <div class="story-box">
-    لقد تم اختراق نظام المدرسة الساعة 3 فجراً! الدرجات مشفرة، والهاكر ترك رسالة غامضة باسم <b>(The Shadow)</b>. 
-    الدلائل تقول أن الهاكر استخدم "رابط تصيد" أرسله لأحد المعلمين.<br><br>
-    <b>مهمتك الآن:</b> معرفة من الفاعل وتطهير النظام!
+    في تمام الساعة 2:45 صباحاً، انطلقت صافرات الإنذار في "سيرفر المدرسة المركزي". 
+    شخص مجهول يلقب نفسه بـ <b>"الظل الأسود"</b> تمكن من تجاوز جدران الحماية. 
+    لم يكتفِ بتغيير الدرجات، بل قام بقفل ملفات "نتائج التخرج" وطلب فدية ضخمة! <br><br>
+    كاميرات المراقبة الرقمية سجلت دخولاً من عنوان IP مجهول، والشكوك تدور حول 3 أشخاص.. 
+    لكن الأهم الآن ليس من الفاعل، بل كيف أوقف عداد التدمير الذاتي الذي ينتهي بعد 5 دقائق!<br><br>
+    <span class="warning-text">⚠️ تنبيه: النظام سينهار تماماً إذا لم يتم تطهير الثغرات الستة فوراً!</span>
     </div>
     """, unsafe_allow_html=True)
     
-    suspect = st.selectbox("من تعتقد أنه المخترق؟", ["طالب عبقري يريد تعديل درجاته", "هاكر مجهول يطلب فدية", "فيروس عشوائي"])
-    if st.button("تأكيد المتهم 🔍"):
-        st.session_state.suspect = suspect
-        st.session_state.step = "solve"
+    if st.button("⚖️ بدء جلسة القضاء السيبراني"):
+        st.session_state.step = "battle_zone"
         st.rerun()
 
-# --- المرحلة 3: الأسئلة والمعالجة ---
-elif st.session_state.step == "solve":
-    st.markdown("<h3>🛠️ مرحلة المعالجة الفنية</h3>", unsafe_allow_html=True)
-    st.write(f"المتهم هو {st.session_state.suspect}. لنبدأ بإغلاق الثغرات:")
+# --- المرحلة 3: الأسئلة الستة (المعركة) ---
+elif st.session_state.step == "battle_zone":
+    st.markdown(f"<h3>🛠️ تطهير النظام - محاولة الإنقاذ</h3>", unsafe_allow_html=True)
+    st.write(f"المحقق: {st.session_state.p_name} | الوقت المتبقي: **04:59** ⏳")
     
-    q1 = st.radio("1. الهاكر استخدم كلمة مرور ضعيفة، ما هي الأقوى؟", ["Jouri123", "J@o#u$R%i_2025", "12345678"])
-    q2 = st.radio("2. ما هو الرابط الذي تسبب في الاختراق؟", ["google.com", "moe.gov.sa", "free-games-hack.xyz"])
+    with st.expander("🛡️ التحدي 1: رسالة الإيميل المفخخة", expanded=True):
+        q1 = st.radio("وصل إيميل للمديرة يقول 'فاتورة المدرسة متأخرة، اضغط للتحميل'. الإيميل من (admin@school-results-secure.xyz). هل هو آمن؟", ["نعم، يبدو رسمياً", "لا، هذا إيميل تصيد (Phishing)", "سأفتحه من جوالي فقط"])
     
-    if st.button("تطهير النظام 🔥"):
-        if q1 == "J@o#u$R%i_2025" and q2 == "free-games-hack.xyz":
-            st.success("تم التطهير بنجاح! أنت محقق أسطوري.")
-            st.session_state.step = "advice"
-        else:
-            st.error("للأسف، النظام لا يزال مخترقاً! حاول مرة أخرى.")
+    with st.expander("🛡️ التحدي 2: شيفرة الدخول"):
+        q2 = st.radio("الهاكر كسر كلمة مرور السيرفر لأنها كانت '123456'. أي واحدة هي الحصن المنيع؟", ["School@2025_Success!", "MyNameIsJouri", "Admin_Pass_123"])
+
+    with st.expander("🛡️ التحدي 3: الفلاش ميموري الغامض"):
+        q3 = st.radio("وجدتِ فلاش ميموري عليه شعار 'درجات الطلاب' مرمي في الساحة. ماذا تفعلين؟", ["أجربه على كمبيوتر المدرسة", "أعطيه للمديرة فوراً دون فتحه", "أفتحه وأمسح الفيروسات بنفسي"])
+
+    with st.expander("🛡️ التحدي 4: روابط الواتساب"):
+        q4 = st.radio("وصلت رسالة في جروب المدرسة: 'تعديل الدرجات متاح الآن عبر هذا الرابط: http://check-grades.net'.", ["رابط احتيالي واضح", "رابط سريع ومفيد", "رابط تحديث للنظام"])
+
+    with st.expander("🛡️ التحدي 5: جدار الحماية (Firewall)"):
+        q5 = st.radio("أفضل طريقة لمنع الهاكر من العودة مرة أخرى هي:", ["تفعيل التحقق بخطوتين (2FA)", "إخفاء الكمبيوتر في الخزانة", "تغيير خلفية الشاشة"])
+
+    with st.expander("🛡️ التحدي 6: المواجهة النهائية"):
+        q6 = st.radio("الهاكر يحاول الآن مسح النسخة الاحتياطية. الإجراء الفوري هو:", ["فصل السيرفر عن الشبكة (Isolation)", "الاتصال بالشرطة", "إعادة تشغيل الجهاز"])
+
+    if st.button("⚖️ إصدار الحكم النهائي"):
+        # التحقق من الإجابات (الخيار الثاني دائماً هو الصحيح هنا للتبسيط)
+        correct_answers = [
+            q1 == "لا، هذا إيميل تصيد (Phishing)",
+            q2 == "School@2025_Success!",
+            q3 == "أعطيه للمديرة فوراً دون فتحه",
+            q4 == "رابط احتيالي واضح",
+            q5 == "تفعيل التحقق بخطوتين (2FA)",
+            q6 == "فصل السيرفر عن الشبكة (Isolation)"
+        ]
+        st.session_state.score = sum(correct_answers)
+        st.session_state.step = "final_verdict"
         st.rerun()
 
-# --- المرحلة 4: النصيحة والتقييم ---
-elif st.session_state.step == "advice":
-    st.balloons()
-    st.markdown("<h1>🏆 تم إنقاذ النظام!</h1>", unsafe_allow_html=True)
-    st.write(f"كفو يا {st.session_state.p_name}! المدرسة فخورة بك.")
+# --- المرحلة 4: الحكم والتقييم ---
+elif st.session_state.step == "final_verdict":
+    st.markdown(f"<h1>⚖️ حكم القضاء السيبراني</h1>", unsafe_allow_html=True)
+    if st.session_state.score >= 5:
+        st.balloons()
+        st.success(f"لقد فعلتها يا {st.session_state.p_name}! تم دحر 'الظل الأسود' واستعادة الدرجات.")
+    else:
+        st.error(f"للأسف يا {st.session_state.p_name}، الهاكر كان أسرع منك. النظام تدمر جزئياً.")
+
+    st.write(f"نقاط الحماية التي حققتها: **{st.session_state.score} من 6**")
     
     st.write("---")
-    st.write("بصفتك محققاً، اكتب نصيحة للأمان السيبراني لزملائك:")
-    advice = st.text_area("نصيحة المحقق:", placeholder="اكتب نصيحتك هنا...")
+    st.subheader("✍️ بصفتكِ المحققة الجوري، ما هي توصياتكِ الأمنية؟")
+    advice = st.text_area("اكتبي نصيحتك للطلاب هنا:", placeholder="مثلاً: لا تضعوا كلمات مرور سهلة..")
     
-    if st.button("إرسال التقرير النهائي"):
-        st.write("### 💻 تقييم المحققة الجوري لنصيحتك:")
-        if len(advice) > 10:
-            st.success("تقييم ممتاز! نصيحة احترافية ومفيدة جداً.")
-        else:
-            st.warning("نصيحة جيدة، لكن يفضل أن تكون أكثر تفصيلاً.")
-        
-        st.markdown("<br><hr><center>تطوير المبدعة: الجوري ✨</center>", unsafe_allow_html=True)
-        if st.button("إعادة المهمة 🔄"):
-            st.session_state.step = "welcome"
+    if st.button("ختم القضية 📜"):
+        st.info("نظام كود-قاتشر يقوم بتحليل نصيحتك الآن...")
+        time.sleep(2)
+        st.success(f"نصيحة ذهبية! تم اعتمادها في سجلات المدرسة.")
+        st.markdown(f"<br><center>تم التطوير بواسطة المبدعة: <b>الجوري</b> ✨</center>", unsafe_allow_html=True)
+        if st.button("بدء تحقيق جديد 🔄"):
+            st.session_state.clear()
             st.rerun()
