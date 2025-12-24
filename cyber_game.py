@@ -4,101 +4,89 @@ import time
 # إعدادات الصفحة
 st.set_page_config(page_title="Code Catcher: The Investigation", page_icon="🕵️‍♂️", layout="centered")
 
-# التنسيق البصري المتقدم
+# التنسيق البصري (أسود وأخضر هاكرز)
 st.markdown("""
     <style>
     .main { background-color: #000000; }
-    .stTextInput > div > div > input { background-color: #1a1a1a; color: #00FF41; border: 1px solid #00FF41; }
-    .stButton > button { width: 100%; border-radius: 10px; background-color: transparent; color: #00FF41; border: 2px solid #00FF41; font-weight: bold; }
+    .stApp { background-color: #000000; }
+    h1, h2, h3, p, label { color: #00FF41 !important; font-family: 'Courier New', monospace; }
+    .stButton > button { width: 100%; background-color: transparent; color: #00FF41; border: 2px solid #00FF41; border-radius: 10px; font-weight: bold; }
     .stButton > button:hover { background-color: #00FF41; color: black; box-shadow: 0 0 20px #00FF41; }
-    .story-box { padding: 20px; border: 1px solid #00FF41; border-radius: 10px; background-color: #0d0d0d; color: #00FF41; line-height: 1.6; }
-    h1, h2, h3 { color: #00FF41 !important; text-align: center; }
-    .terminal-text { font-family: 'Courier New', Courier, monospace; color: #00FF41; }
+    .stTextInput > div > div > input { background-color: #1a1a1a; color: #00FF41; border: 1px solid #00FF41; }
+    .story-box { padding: 15px; border: 1px solid #00FF41; border-radius: 10px; background-color: #0d0d0d; margin-bottom: 20px; }
     </style>
     """, unsafe_allow_html=True)
 
-# إدارة حالة اللعبة
-if 'game_step' not in st.session_state:
-    st.session_state.game_step = "welcome"
-if 'player_name' not in st.session_state:
-    st.session_state.player_name = ""
+# إدارة مراحل اللعبة
+if 'step' not in st.session_state:
+    st.session_state.step = "welcome"
 
-# --- 1. شاشة الترحيب ---
-if st.session_state.game_step == "welcome":
+# --- المرحلة 1: الترحيب والاسم ---
+if st.session_state.step == "welcome":
     st.markdown("<h1>🕵️‍♂️ أهلاً بك في عالم كود-قاتشر</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center;'>من هُنا تبدأ رحلتك في عالم الأمن السيبراني</p>", unsafe_allow_html=True)
     st.image("https://r2.erweima.ai/i/6DAnC4M_S2m4_wS_Y1A5pA.png", width=300)
+    st.write("من هُنا تبدأ رحلتك في عالم الأمن السيبراني..")
     
-    player_n = st.text_input("أدخل اسمك أيها المحقق الرقمي:", placeholder="اكتب اسمك هنا...")
+    p_name = st.text_input("أدخل اسمك أيها المحقق الرقمي:", key="name_input")
     if st.button("🚀 ابدأ الآن"):
-        if player_n:
-            st.session_state.player_name = player_n
-            st.session_state.game_step = "story"
+        if p_name:
+            st.session_state.p_name = p_name
+            st.session_state.step = "story"
             st.rerun()
         else:
-            st.warning("يرجى إدخال اسمك لبدء المهمة!")
+            st.error("لازم تكتب اسمك عشان نبدأ المهمة!")
 
-# --- 2. القصة والتحقيق ---
-elif st.session_state.game_step == "story":
-    st.subheader("🚨 بلاغ عاجل: اختراق السيرفر المركزي")
+# --- المرحلة 2: القصة والتحقيق ---
+elif st.session_state.step == "story":
+    st.markdown(f"<h3>🚨 بلاغ اختراق عاجل يا {st.session_state.p_name}!</h3>", unsafe_allow_html=True)
     st.markdown(f"""
     <div class="story-box">
-    المحقق <b>{st.session_state.player_name}</b>، استيقظنا اليوم على كارثة! 
-    جميع درجات الطلاب في المدرسة تم تشفيرها وتحولت إلى رموز غريبة. 
-    ترك المخترق رسالة غامضة تقول: "لن تستطيعوا الوصول لبياناتكم إلا إذا عرفتم من أنا!".<br><br>
-    <b>الأدلة المتوفرة:</b><br>
-    1. تم الدخول للنظام الساعة 3 فجراً من جهاز خارجي.<br>
-    2. البصمة الرقمية تشير إلى شخص استخدم "كلمة مرور" ضعيفة جداً لأحد المعلمين.<br>
-    3. وجدنا ملفاً مخفياً باسم "The_Shadow".
+    لقد تم اختراق نظام المدرسة الساعة 3 فجراً! الدرجات مشفرة، والهاكر ترك رسالة غامضة باسم <b>(The Shadow)</b>. 
+    الدلائل تقول أن الهاكر استخدم "رابط تصيد" أرسله لأحد المعلمين.<br><br>
+    <b>مهمتك الآن:</b> معرفة من الفاعل وتطهير النظام!
     </div>
     """, unsafe_allow_html=True)
     
-    st.write("### 🔍 من تعتقد أنه وراء الاختراق؟")
-    suspect = st.selectbox("اختر المتهم الرئيسي:", ["طالب عبقري يريد تغيير درجاته", "مخترق خارجي (هاكر) يبحث عن فدية", "فيروس عشوائي بسبب رابط إعلاني"])
-    
-    if st.button("تأكيد المشتبه به"):
+    suspect = st.selectbox("من تعتقد أنه المخترق؟", ["طالب عبقري يريد تعديل درجاته", "هاكر مجهول يطلب فدية", "فيروس عشوائي"])
+    if st.button("تأكيد المتهم 🔍"):
         st.session_state.suspect = suspect
-        st.session_state.game_step = "solve"
+        st.session_state.step = "solve"
         st.rerun()
 
-# --- 3. المعالجة (الأسئلة التقنية) ---
-elif st.session_state.game_step == "solve":
-    st.header("🛠️ مرحلة التطهير والمعالجة")
-    st.write(f"لقد عرفنا أن الجاني هو **{st.session_state.suspect}**. الآن يجب عليك معالجة النظام يا {st.session_state.player_name}!")
+# --- المرحلة 3: الأسئلة والمعالجة ---
+elif st.session_state.step == "solve":
+    st.markdown("<h3>🛠️ مرحلة المعالجة الفنية</h3>", unsafe_allow_html=True)
+    st.write(f"المتهم هو {st.session_state.suspect}. لنبدأ بإغلاق الثغرات:")
     
-    st.write("---")
-    st.write("**السؤال 1: الهاكر دخل عبر كلمة مرور المعلم. كيف نحمي الحساب الآن؟**")
-    q1 = st.radio("اختر الحل:", ["تغيير كلمة المرور لـ (Jouri@2025#)", "حذف حساب المعلم", "إطفاء السيرفر"])
+    q1 = st.radio("1. الهاكر استخدم كلمة مرور ضعيفة، ما هي الأقوى؟", ["Jouri123", "J@o#u$R%i_2025", "12345678"])
+    q2 = st.radio("2. ما هو الرابط الذي تسبب في الاختراق؟", ["google.com", "moe.gov.sa", "free-games-hack.xyz"])
     
-    st.write("**السؤال 2: وجدنا رابطاً خبيثاً هو سبب دخول الفيروس. ما هو الرابط الأخطر؟**")
-    q2 = st.radio("اختر الرابط:", ["https://moe.gov.sa", "http://win-iphone-free.biz/login", "https://google.com"])
-    
-    if st.button("🛡️ تنفيذ أوامر التطهير"):
-        if q1 == "تغيير كلمة المرور لـ (Jouri@2025#)" and q2 == "http://win-iphone-free.biz/login":
-            st.session_state.game_step = "advice"
+    if st.button("تطهير النظام 🔥"):
+        if q1 == "J@o#u$R%i_2025" and q2 == "free-games-hack.xyz":
+            st.success("تم التطهير بنجاح! أنت محقق أسطوري.")
+            st.session_state.step = "advice"
         else:
-            st.error("فشلت المعالجة! بعض الثغرات لا تزال مفتوحة. حاول مرة أخرى.")
+            st.error("للأسف، النظام لا يزال مخترقاً! حاول مرة أخرى.")
         st.rerun()
 
-# --- 4. نصائح المحقق والتقييم ---
-elif st.session_state.game_step == "advice":
+# --- المرحلة 4: النصيحة والتقييم ---
+elif st.session_state.step == "advice":
     st.balloons()
-    st.title("✅ تم استعادة النظام!")
-    st.success(f"كفو يا {st.session_state.player_name}! لقد أنقذت المدرسة.")
+    st.markdown("<h1>🏆 تم إنقاذ النظام!</h1>", unsafe_allow_html=True)
+    st.write(f"كفو يا {st.session_state.p_name}! المدرسة فخورة بك.")
     
     st.write("---")
-    st.subheader("✍️ اكتب نصيحتك الأخيرة لزملائك لحمايتهم مستقبلاً:")
-    user_advice = st.text_area("نصيحة المحقق:", placeholder="مثلاً: لا تفتحوا الروابط المجهولة...")
+    st.write("بصفتك محققاً، اكتب نصيحة للأمان السيبراني لزملائك:")
+    advice = st.text_area("نصيحة المحقق:", placeholder="اكتب نصيحتك هنا...")
     
     if st.button("إرسال التقرير النهائي"):
-        st.write("### 💻 تقييم نظام كود-قاتشر لنصيحتك:")
-        if len(user_advice) > 10:
-            st.info(f"نصيحتك ممتازة يا {st.session_state.player_name}! نظامنا يضيف عليها: 'تأكد دائماً من تفعيل التحقق الثنائي'.")
-            st.markdown("### التقييم النهائي: محقق سيبراني من الدرجة الأولى 🎖️")
+        st.write("### 💻 تقييم المحققة الجوري لنصيحتك:")
+        if len(advice) > 10:
+            st.success("تقييم ممتاز! نصيحة احترافية ومفيدة جداً.")
         else:
-            st.warning("نصيحة قصيرة جداً، لكنها بداية جيدة!")
+            st.warning("نصيحة جيدة، لكن يفضل أن تكون أكثر تفصيلاً.")
         
-        st.markdown(f"<div style='text-align:center; color:#00FF41;'>المطورة المبدعة للمشروع: الجوري ✨</div>", unsafe_allow_html=True)
+        st.markdown("<br><hr><center>تطوير المبدعة: الجوري ✨</center>", unsafe_allow_html=True)
         if st.button("إعادة المهمة 🔄"):
-            st.session_state.clear()
+            st.session_state.step = "welcome"
             st.rerun()
